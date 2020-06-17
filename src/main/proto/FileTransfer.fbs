@@ -1,0 +1,8 @@
+include "TransferMessage.fbs";
+namespace org.example;
+
+rpc_service FileTransfer{
+SendData(TransferMsg):TransferReply (streaming: "bidi");
+}
+
+root_type TransferMsg;

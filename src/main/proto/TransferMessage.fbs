@@ -1,0 +1,11 @@
+namespace org.example;
+
+table TransferMsg {
+partId: uint32;
+data: [byte];
+}
+
+table TransferReply {
+partId: uint32;
+message: string;
+}
