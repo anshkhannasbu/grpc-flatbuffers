@@ -1,0 +1,16 @@
+syntax = "proto3";
+package org.example;
+
+message TransferMsgProto {
+    uint32 partId = 1;
+    bytes data = 2;
+}
+
+message TransferReplyProto {
+    uint32 partId = 1;
+    string message = 2;
+}
+
+service ProtobufService {
+    rpc sendData(stream TransferMsgProto) returns (stream TransferReplyProto);
+}
