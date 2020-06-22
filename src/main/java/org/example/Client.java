@@ -6,11 +6,13 @@ import io.grpc.*;
 import java.io.File;
 import java.io.FileInputStream;
 import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.protobuf.LiteralByteString;
 import io.grpc.stub.StreamObserver;
 import org.example.ProtoFileTransfer.TransferMsgProto;
 import org.example.ProtoFileTransfer.TransferReplyProto;
 import org.example.TransferMsg;
 import org.example.TransferReply;
+
 
 
 public class Client {
@@ -31,7 +33,6 @@ public class Client {
         StreamObserver<TransferMsg> requestObserver = asyncStubFlat.sendData(new StreamObserver<TransferReply>(){
             @Override
             public void onNext(TransferReply msg) {
-                System.out.println(msg.partId());
                 recv[0]++;
             }
 
@@ -49,11 +50,11 @@ public class Client {
         });
         try{
             int i = 0;
-            while(i < 10) {
+            byte[] chunk = new byte[64 * 1024];
+            int chunkLen = 0;
+            while(i < 1000) {
                 File file = new File("../bigtext.txt");
                 FileInputStream is = new FileInputStream(file);
-                byte[] chunk = new byte[1024 * 1024];
-                int chunkLen = 0;
                 while ((chunkLen = is.read(chunk)) != -1) {
                     partId++;
                     FlatBufferBuilder builder = new FlatBufferBuilder();
@@ -84,7 +85,6 @@ public class Client {
 
             @Override
             public void onNext(TransferReplyProto msg) {
-                System.out.println(msg.getPartId());
                 recv[0]++;
             }
 
@@ -102,17 +102,16 @@ public class Client {
         });
         try{
             int i = 0;
-            while(i < 10) {
+            byte[] chunk = new byte[64 * 1024];
+            int chunkLen = 0;
+            while(i < 1000) {
                 File file = new File("../bigtext.txt");
                 FileInputStream is = new FileInputStream(file);
-                byte[] chunk = new byte[1024 * 1024];
-                int chunkLen = 0;
                 while ((chunkLen = is.read(chunk)) != -1) {
                     partId++;
                     TransferMsgProto msg = TransferMsgProto.newBuilder().setPartId(partId).setData(ByteString.copyFrom(chunk)).build();
                     requestObserver.onNext(msg);
                 }
-                Thread.sleep(1000);
                 i++;
             }
 
