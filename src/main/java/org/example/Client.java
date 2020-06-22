@@ -63,7 +63,6 @@ public class Client {
                     TransferMsg msg = TransferMsg.getRootAsTransferMsg(builder.dataBuffer());
                     requestObserver.onNext(msg);
                 }
-                Thread.sleep(1000);
                 i++;
             }
 

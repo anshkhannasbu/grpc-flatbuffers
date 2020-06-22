@@ -26,7 +26,6 @@ public class ProtobufServiceImpl extends ProtobufServiceGrpc.ProtobufServiceImpl
 
             @Override
             public void onCompleted(){
-                System.out.println(x);
                 responseObserver.onCompleted();
             }
         };

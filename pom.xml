@@ -11,6 +11,7 @@
     <properties>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <javac.version>1.8</javac.version>
+        <protobuf-maven-plugin.version>0.5.1</protobuf-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -29,16 +30,21 @@
             <artifactId>flatbuffers-java-grpc</artifactId>
             <version>1.11.0</version>
         </dependency>
-    <dependency>
-        <groupId>io.grpc</groupId>
-        <artifactId>grpc-netty</artifactId>
-        <version>1.29.0</version>
-    </dependency>
-    <dependency>
-        <groupId>io.grpc</groupId>
-        <artifactId>grpc-stub</artifactId>
-        <version>1.29.0</version>
-    </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty</artifactId>
+            <version>1.29.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>1.29.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>1.29.0</version>
+        </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-api</artifactId>
@@ -46,25 +52,50 @@
         </dependency>
     </dependencies>
     <build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>${maven-compiler-plugin.version}</version>
-            <configuration>
-                <source>${javac.version}</source>
-                <target>${javac.version}</target>
-                <fork>true</fork>
-                <meminitial>512m</meminitial>
-                <maxmem>2048m</maxmem>
-                <showDeprecation>false</showDeprecation>
-                <useIncrementalCompilation>false</useIncrementalCompilation>
-                <compilerArgs>
-                    <arg>-Xlint:all,-options,-path</arg>
-                </compilerArgs>
-            </configuration>
-        </plugin>
-    </plugins>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.5.0.Final</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${javac.version}</source>
+                    <target>${javac.version}</target>
+                    <fork>true</fork>
+                    <meminitial>512m</meminitial>
+                    <maxmem>2048m</maxmem>
+                    <showDeprecation>false</showDeprecation>
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
+                    <compilerArgs>
+                        <arg>-Xlint:all,-options,-path</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>${protobuf-maven-plugin.version}</version>
+                <configuration>
+                    <protocArtifact>com.google.protobuf:protoc:3.4.0:exe:${os.detected.classifier}</protocArtifact>
+                    <pluginId>grpc-java</pluginId>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.7.0:exe:${os.detected.classifier}</pluginArtifact>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
 </project>

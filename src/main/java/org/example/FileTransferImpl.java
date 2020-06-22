@@ -29,7 +29,6 @@ public class FileTransferImpl extends org.example.FileTransferGrpc.FileTransferI
 
             @Override
             public void onCompleted(){
-                System.out.println(x);
                 responseObserver.onCompleted();
             }
         };
