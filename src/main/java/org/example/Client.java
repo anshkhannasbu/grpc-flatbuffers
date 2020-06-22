@@ -53,7 +53,7 @@ public class Client {
             byte[] chunk = new byte[64 * 1024];
             int chunkLen = 0;
             while(i < 1000) {
-                File file = new File("../bigtext.txt");
+                File file = new File("./bigtext.txt");
                 FileInputStream is = new FileInputStream(file);
                 while ((chunkLen = is.read(chunk)) != -1) {
                     partId++;
